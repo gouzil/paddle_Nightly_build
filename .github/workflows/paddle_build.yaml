@@ -88,6 +88,31 @@ jobs:
         run: |
           python${{ matrix.python-version-with-wheel[0] }} -c "import paddle; paddle.utils.run_check()"
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.python-version-with-wheel[1] }}
+          path: Paddle/build/python/dist/${{ matrix.python-version-with-wheel[1] }}
+
+  Upload-Release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version-with-wheel:
+          - ["3.8", "paddlepaddle-0.0.0-cp38-cp38-linux_x86_64.whl"]
+          - ["3.9", "paddlepaddle-0.0.0-cp39-cp39-linux_x86_64.whl"]
+          - ["3.10", "paddlepaddle-0.0.0-cp310-cp310-linux_x86_64.whl"]
+        include:
+          - os: ubuntu-latest
+            python-version-with-wheel: ["3.10", "paddlepaddle-0.0.0-cp310-cp310-linux_x86_64.whl"]
+            download-version: "3.10.12"
+    runs-on: ${{ matrix.os }}
+    name: paddle-py${{ matrix.python-version-with-wheel[0] }}-nightly
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.python-version-with-wheel[1] }}
       - name: Upload Release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -95,10 +120,4 @@ jobs:
           overwrite: true
           file_glob: true
           repo_token: ${{ secrets.GITHUBTOKEN }}
-          file: Paddle/build/python/dist/${{ matrix.python-version-with-wheel[1] }}
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.python-version-with-wheel[1] }}
-          path: Paddle/build/python/dist/${{ matrix.python-version-with-wheel[1] }}
+          file: ${{ matrix.python-version-with-wheel[1] }}
