@@ -95,6 +95,7 @@ jobs:
           path: Paddle/build/python/dist/${{ matrix.python-version-with-wheel[1] }}
 
   Upload-Release:
+    needs: Build
     strategy:
       fail-fast: false
       matrix:
