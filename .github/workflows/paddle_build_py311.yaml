@@ -39,7 +39,7 @@ jobs:
       - name: init system
         run: |
           apt-get update
-          apt-get install wget curl git make cmake bzip2 neofetch libffi-dev libsqlite3-dev -y
+          apt-get install wget curl git make cmake bzip2 neofetch libffi-dev libsqlite3-dev -y tree
 
       - name: Build Python
         if: ${{ matrix.download-version }}
@@ -69,12 +69,17 @@ jobs:
           echo "------------------------ pip list -----------------------------"
           pip list
 
-      - name: paddle build
+      - name: run cmake
         run: |
           cd Paddle
           mkdir build
           cd build
           cmake .. -DPY_VERSION=${{ matrix.python-version-with-wheel[0] }} -DWITH_GPU=OFF
+          tree
+
+      - name: paddle build
+        run: |
+          cd Paddle/build
           make -j$(nproc)
 
       - name: paddle install
