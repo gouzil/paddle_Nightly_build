@@ -32,7 +32,8 @@ jobs:
     steps:
       - name: git clone
         run: |
-          git clone -b test-symbolic-trace https://github.com/2742195759/Paddle Paddle/
+          # https://github.com/PaddlePaddle/Paddle/pull/55975
+          git clone -b test-symbolic-trace-enable-sot https://github.com/2742195759/Paddle Paddle/
           cd Paddle
           ls -al
           pwd
