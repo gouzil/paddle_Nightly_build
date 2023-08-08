@@ -4,8 +4,6 @@ env:
   GITHUB_WORKSPACE: /home/runner/work/
 
 on:
-  schedule:
-    - cron: '10 16 * * *'
   push:
   workflow_dispatch:
 
